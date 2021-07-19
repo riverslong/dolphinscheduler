@@ -30,7 +30,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.net.ConnectException;
 import java.util.Objects;
 
 public class FourLetterWordMain {
@@ -90,7 +89,7 @@ public class FourLetterWordMain {
                 }
                 return sb.toString();
             }
-        } catch (SocketTimeoutException | ConnectException e ) {
+        } catch (SocketTimeoutException e) {
             throw new IOException("Exception while executing four letter word: " + cmd, e);
         }
     }
