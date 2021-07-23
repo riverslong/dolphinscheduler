@@ -34,6 +34,7 @@ public class SqlParametersTest {
     private final int displayRows = 10;
     private final String showType = "TABLE";
     private final String title = "sql test";
+    private final int limit = 10;
 
     @Test
     public void testSqlParameters() {
@@ -49,6 +50,7 @@ public class SqlParametersTest {
         sqlParameters.setDisplayRows(displayRows);
         sqlParameters.setShowType(showType);
         sqlParameters.setTitle(title);
+        sqlParameters.setLimit(limit);
 
         Assert.assertEquals(type, sqlParameters.getType());
         Assert.assertEquals(sql, sqlParameters.getSql());
@@ -59,6 +61,7 @@ public class SqlParametersTest {
         Assert.assertEquals(displayRows, sqlParameters.getDisplayRows());
         Assert.assertEquals(showType, sqlParameters.getShowType());
         Assert.assertEquals(title, sqlParameters.getTitle());
+        Assert.assertEquals(limit, sqlParameters.getLimit());
 
         Assert.assertTrue(sqlParameters.checkParameters());
     }

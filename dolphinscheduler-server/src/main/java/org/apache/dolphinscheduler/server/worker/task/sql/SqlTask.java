@@ -97,11 +97,6 @@ public class SqlTask extends AbstractTask {
      */
     private TaskExecutionContext taskExecutionContext;
 
-    /**
-     * default query sql limit
-     */
-    private static final int LIMIT = 10000;
-
     public SqlTask(TaskExecutionContext taskExecutionContext, Logger logger) {
         super(taskExecutionContext, logger);
 
@@ -124,14 +119,17 @@ public class SqlTask extends AbstractTask {
         Thread.currentThread().setName(threadLoggerInfoName);
 
         logger.info("Full sql parameters: {}", sqlParameters);
-        logger.info("sql type : {}, datasource : {}, sql : {} , localParams : {},udfs : {},showType : {},connParams : {}",
+        logger.info("sql type : {}, datasource : {}, sql : {} , localParams : {},udfs : {},showType : {},connParams : {}"
+                        + ", query max result limit : {}",
                 sqlParameters.getType(),
                 sqlParameters.getDatasource(),
                 sqlParameters.getSql(),
                 sqlParameters.getLocalParams(),
                 sqlParameters.getUdfs(),
                 sqlParameters.getShowType(),
-                sqlParameters.getConnParams());
+                sqlParameters.getConnParams(),
+                sqlParameters.getLimit()
+        );
         try {
             SQLTaskExecutionContext sqlTaskExecutionContext = taskExecutionContext.getSqlTaskExecutionContext();
             // load class
@@ -171,6 +169,7 @@ public class SqlTask extends AbstractTask {
 
     /**
      * ready to execute SQL and parameter entity Map
+     *
      * @return SqlBinds
      */
     private SqlBinds getSqlAndSqlParamsMap(String sql) {
@@ -222,10 +221,11 @@ public class SqlTask extends AbstractTask {
 
     /**
      * execute function and sql
-     * @param mainSqlBinds          main sql binds
-     * @param preStatementsBinds    pre statements binds
-     * @param postStatementsBinds   post statements binds
-     * @param createFuncs           create functions
+     *
+     * @param mainSqlBinds main sql binds
+     * @param preStatementsBinds pre statements binds
+     * @param postStatementsBinds post statements binds
+     * @param createFuncs create functions
      */
     public void executeFuncAndSql(SqlBinds mainSqlBinds,
                                         List<SqlBinds> preStatementsBinds,
@@ -282,7 +282,7 @@ public class SqlTask extends AbstractTask {
 
         int rowCount = 0;
 
-        while (rowCount < LIMIT && resultSet.next()) {
+        while (rowCount < sqlParameters.getLimit() && resultSet.next()) {
             JSONObject mapOfColValues = new JSONObject(true);
             for (int i = 1; i <= num; i++) {
                 mapOfColValues.put(md.getColumnLabel(i), resultSet.getObject(i));
